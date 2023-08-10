@@ -1,0 +1,16 @@
+{
+  "access_key": "sasas",
+  "token": "sasa",
+  "shippingData": [
+    {
+      "distanceFrom": "0",
+      "distanceTo": "15",
+      "shippingRate": "18.95"
+    },
+    {
+      "distanceFrom": "16",
+      "distanceTo": "20",
+      "shippingRate": "20.95"
+    }
+  ]
+}
