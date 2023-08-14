@@ -109,7 +109,7 @@ app.post('/calculate_shipping', async function(req, res){
                           {
                             "service_name": "Balloon Town Shipping",
                             "service_code": "standard",
-                            "total_price": shipping_cost,
+                            "total_price": shipping_cost * 100,
                             "description": "Delivery",
                             "currency": "AUD",
                             "min_delivery_date": "2023-12-30 14:48:45 -0400",
