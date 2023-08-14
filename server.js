@@ -107,7 +107,7 @@ app.post('/calculate_shipping', async function(req, res){
         let response = {
                         "rates": [
                           {
-                            "service_name": "Distance Based Shipping",
+                            "service_name": "Balloon Town Shipping",
                             "service_code": "standard",
                             "total_price": shipping_cost,
                             "description": "Delivery",
