@@ -8,39 +8,69 @@ const path = require('path');
 const cors = require("cors");
 const app = express();
 const port = 3001;
-const  apiKey = process.env.apiKey;
+const c = process.env.apiKey;
 const opencageapikey = process.env.opencageapikey;
 const moment = require('moment-timezone');
+const shopifyStore = process.env.shopifyStore;
+const shopifyToken = process.env.shopifyToken;
+const themeId = '157343285525';
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+const assetKey = 'assets/settings.json'; // The asset key (filename)
+
+const apiUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
 
 app.post('/saveSettings', (req, res) => {
   const settings = req.body;
+  const assetValue = JSON.stringify(settings, null, 2)
 
-  const settingsFilePath = path.join(__dirname, 'settings.json');
-  fs.writeFile(settingsFilePath, JSON.stringify(settings, null, 2), (err) => {
-    if (err) {
-      console.error('Error saving settings:', err);
-      res.status(500).json({ error: 'Error saving settings' });
-    } else {
-      console.log('Settings saved successfully');
-      res.json({ message: 'Settings saved successfully' });
-    }
-  });
-});
+  axios({
+        method: 'PUT',
+        url: apiUrl,
+         headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": shopifyToken,
+        },
+        data: {
+          asset: {
+            key: assetKey,
+            value: assetValue,
+          },
+        },
+      })
+        .then((response) => {
+         console.log('Settings saved successfully');
+         res.json({ message: 'Settings saved successfully' });
+        })
+        .catch((error) => {
+           console.error('Error saving settings:', error);
+           res.status(500).json({ error: 'Error saving settings' });
+        });
+      });
 
-app.get('/getSettings', (req, res) => {
-  const settingsFilePath = path.join(__dirname, 'settings.json');
-  fs.readFile(settingsFilePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading settings:', err);
-      res.status(500).json({ error: 'Error fetching settings' });
-    } else {
-      const settings = JSON.parse(data);
-      res.json(settings);
-    }
-  });
+app.get('/getSettings', async(req, res) => {
+   const response = await axios.get(
+      `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
+    ).then((data) => {
+          console.log(data.data);
+          const settings = data.data;
+          res.json(settings);
+        })
+        .catch((error) => {
+           console.error('Error saving settings:', error);
+           res.status(500).json({ error: 'Error saving settings' });
+        });
+          /*  const settingsFilePath = path.join(__dirname, 'settings.json');
+            fs.readFile(settingsFilePath, 'utf8', (err, data) => {
+              if (err) {
+                console.error('Error reading settings:', err);
+                res.status(500).json({ error: 'Error fetching settings' });
+              } else {
+                const settings = JSON.parse(data);
+                res.json(settings);
+              }
+            });*/
 });
 
 // This is callback URL
@@ -56,7 +86,7 @@ app.post('/calculate_shipping', async function(req, res){
    let province = req.body.rate.destination.province;
    let country = req.body.rate.destination.country;
    //let endPostalCode = '4140 Commonwealth St,New South Wales,Sydney, Australia';
- //  let endPostalCode = address1 +', '+address2 +', '+address3 +', '+city+', '+province+', '+country+', '+postalCode;
+   //let endPostalCode = address1 +', '+address2 +', '+address3 +', '+city+', '+province+', '+country+', '+postalCode;
 
    let endPostalCode ='';
    if(address1) { endPostalCode = endPostalCode + address1 + ',';}
@@ -73,11 +103,54 @@ app.post('/calculate_shipping', async function(req, res){
    // Implement OPEN CAGE API
    let shipping_cost = 0;
    let distance = 0;
+   const currentDate = moment();
+   const formattedDate = currentDate.format('YYYY-MM-DD HH:mm:ss');
+   const nextDay = currentDate.add(1, 'day');
+   const formattedNextDay = nextDay.format('YYYY-MM-DD HH:mm:ss');
    try {
 
-   
-    
-    fs.readFile('settings.json', 'utf8', async(err, data) => {
+       const response = await axios.get(
+          `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
+         ).then(async (data) => {
+          const jsonData = data.data;
+          startPostalCode = jsonData.storeAddress;
+          distance = await getRouteDistance(startPostalCode, endPostalCode);
+      
+          const shippingData = jsonData.shippingData;
+          for (const item of shippingData) {
+              const distanceFrom = item.distanceFrom;
+              const distanceTo = item.distanceTo;
+            
+              if( distanceFrom  <= distance && distanceTo >= distance)
+              {
+                  shipping_cost = item.shippingRate;
+                  console.log(`Shipping Rate: $${shipping_cost}`);
+              }
+
+              console.log(`Distance From: ${distanceFrom}`);
+              console.log(`Distance To: ${distanceTo}`);
+            
+              console.log("---------------------");
+            }
+
+            console.log(`Driving distance between ${startPostalCode} and ${endPostalCode}: ${distance} km`);
+            let response = {
+                "rates": [
+                  {
+                    "service_name": "Balloon Town Shipping",
+                    "service_code": "standard",
+                    "total_price": shipping_cost * 100,
+                    "description": "Delivery",
+                    "currency": "AUD",
+                    "min_delivery_date": formattedDate,
+                    "max_delivery_date": formattedNextDay
+                  }
+                ]
+              };
+              res.send(response);
+        })
+        
+       /*fs.readFile('settings.json', 'utf8', async(err, data) => {
         if (err) {
             console.error('Error reading JSON file:', err);
             return;
@@ -119,7 +192,7 @@ app.post('/calculate_shipping', async function(req, res){
                       };
                       res.send(response);
 
-     });
+     });*/
    
         // Construct response
   
@@ -171,14 +244,61 @@ async function getCoordinatesForPostalCode(postalCode) {
   }
 }
 
-app.get('/datepicker-options', (req, res) => {
+app.get('/datepicker-options', async(req, res) => {
   console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
-  fs.readFile('settings.json', 'utf8', async(err, data) => {
+       const response = await axios.get(
+          `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
+         ).then(async (data) => {
+          const currentTime = moment();
+          const currentTimeFormatted = currentTime.format('h:mm A'); // Format as "3:30 PM"
+          const isMorning = currentTime.format('A') === 'AM';
+          const isAfternoon = currentTime.format('A') === 'PM';
+          const jsonData = data.data;
+          if(isMorning && jsonData.selectedPeriods['am']){      
+          // Add the current date to the blockedDates array if it's morning
+                jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
+                console.log(jsonData.dateFields);
+            }
+            console.log(isAfternoon);
+            console.log(jsonData.selectedPeriods['pm']);
+             if(isAfternoon && jsonData.selectedPeriods['pm'] ){      
+               // Add the current date to the blockedDates array if it's morning
+                jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
+                console.log(jsonData.dateFields);
+            }
+          const dayNameToNumber = {
+              "sunday": 0,
+              "monday": 1,
+              "tuesday": 2,
+              "wednesday": 3,
+              "thursday": 4,
+              "friday": 5,
+              "saturday": 6
+            };  
+          let blockedWeekdays = [];
+          let selectedDays = jsonData.selectedDays
+          for (const day in selectedDays) {
+              if (selectedDays[day] === true) {
+                blockedWeekdays.push(dayNameToNumber[day]);
+              } 
+            }  
+          const datepickerOptions = {
+          dateFormat: 'yy-mm-dd',
+          minDate: 0,
+          maxDate: '+30d', // Allow selecting dates up to 30 days from today
+          blockedWeekdays: blockedWeekdays,
+          blockedDates: jsonData.dateFields, 
+          // Add other options as needed
+        };
+        res.json(datepickerOptions);
+
+         })
+  /*fs.readFile('settings.json', 'utf8', async(err, data) => {
         if (err) {
             console.error('Error reading JSON file:', err);
             return;
         }
-          const currentTime = moment();
+        const currentTime = moment();
         const currentTimeFormatted = currentTime.format('h:mm A'); // Format as "3:30 PM"
         const isMorning = currentTime.format('A') === 'AM';
         const isAfternoon = currentTime.format('A') === 'PM';
@@ -222,7 +342,7 @@ app.get('/datepicker-options', (req, res) => {
           // Add other options as needed
         };
         res.json(datepickerOptions);
-      });
+      });*/
  
 });
 
