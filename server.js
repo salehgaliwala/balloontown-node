@@ -21,6 +21,18 @@ const assetKey = 'assets/settings.json'; // The asset key (filename)
 
 const apiUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
 
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const expectedUsername = process.env.REACT_APP_USERNAME;
+  const expectedPassword = process.env.REACT_APP_PASSWORD;
+
+  if (username === expectedUsername && password === expectedPassword) {
+    res.json({ success: true, message: 'Login successful' });
+  } else {
+    res.json({ success: false, message: 'Invalid credentials' });
+  }
+});
+
 app.post('/saveSettings', (req, res) => {
   const settings = req.body;
   const assetValue = JSON.stringify(settings, null, 2)
