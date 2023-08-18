@@ -261,13 +261,20 @@ app.get('/datepicker-options', async(req, res) => {
        const response = await axios.get(
           `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
          ).then(async (data) => {
+          const jsonData = data.data;
           const currentTime = moment();
           const currentTimeFormatted = currentTime.format('h:mm A'); // Format as "3:30 PM"
           const isMorning = currentTime.format('hA') === '11AM';
           const isAfternoon = currentTime.format('hA') === '12PM';
           const isOnePM = currentTime.format('hA') === '1PM';
           const isTwoPM = currentTime.format('hA') === '2PM';
-        
+          const startDate = new Date(jsonData.startDate);
+          const endDate = new Date(jsonData.endDate);          
+          const currentDate = new Date(startDate);
+          while (currentDate <= endDate) {           
+            jsonData.dateFields.push(currentDate.format('YYYY-MM-DD'));
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
           if(isMorning && jsonData.selectedPeriods['11am']){      
           // Add the current date to the blockedDates array if it's morning
                 jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
