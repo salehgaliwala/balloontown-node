@@ -257,7 +257,7 @@ async function getCoordinatesForPostalCode(postalCode) {
 }
 
 app.get('/datepicker-options', async(req, res) => {
-  console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+//  console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
        const response = await axios.get(
           `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
          ).then(async (data) => {
@@ -268,8 +268,8 @@ app.get('/datepicker-options', async(req, res) => {
           const isAfternoon = currentTime.format('hA') === '12PM';
           const isOnePM = currentTime.format('hA') === '1PM';
           const isTwoPM = currentTime.format('hA') === '2PM';
-          const startDate = new Date(jsonData.startDate);
-          const endDate = new Date(jsonData.endDate);          
+          const startDate = new Date(jsonData.fromDate);
+          const endDate = new Date(jsonData.toDate);          
           const currentDate = new Date(startDate);
           while (currentDate <= endDate) {           
             jsonData.dateFields.push(currentDate.format('YYYY-MM-DD'));
@@ -279,14 +279,14 @@ app.get('/datepicker-options', async(req, res) => {
           if(isMorning && jsonData.selectedPeriods['11am']){      
           // Add the current date to the blockedDates array if it's morning
                 jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
-                console.log(jsonData.dateFields);
+              //  console.log(jsonData.dateFields);
             }
-            console.log(isAfternoon);
+          
            
           if(isAfternoon && jsonData.selectedPeriods['12pm'] ){      
                // Add the current date to the blockedDates array if it's morning
                 jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
-                console.log(jsonData.dateFields);
+              //  console.log(jsonData.dateFields);
           }
           if(isOnePM && jsonData.selectedPeriods['1pm'] ){      
                // Add the current date to the blockedDates array if it's morning
