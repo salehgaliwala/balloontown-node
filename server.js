@@ -357,7 +357,10 @@ app.get('/datepicker-options', async(req, res) => {
       });*/
  
 });
+app.post('/checkoutUpdate', (req, res) => {
+  console.log(req.body);
 
+});
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
