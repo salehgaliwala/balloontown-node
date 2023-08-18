@@ -268,9 +268,9 @@ app.get('/datepicker-options', async(req, res) => {
           const isAfternoon = currentTime.format('hA') === '12PM';
           const isOnePM = currentTime.format('hA') === '1PM';
           const isTwoPM = currentTime.format('hA') === '2PM';
-          const startDate = new Date(jsonData.fromDate);
-          const endDate = new Date(jsonData.toDate);          
-          const currentDate = new Date(startDate);
+          const startDate = moment(jsonData.fromDate, 'YYYY-MM-DD');
+          const endDate = moment(jsonData.toDate, 'YYYY-MM-DD');                   
+         const currentDate = startDate.clone();
           while (currentDate <= endDate) {           
             jsonData.dateFields.push(currentDate.format('YYYY-MM-DD'));
             currentDate.setDate(currentDate.getDate() + 1);
