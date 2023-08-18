@@ -358,7 +358,7 @@ app.get('/datepicker-options', async(req, res) => {
  
 });
 app.post('/checkoutUpdate', (req, res) => {
-  console.log(req.body);
+  console.log(req.body.token);
 
 });
 app.listen(port, () => {
