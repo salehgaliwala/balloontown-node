@@ -13,7 +13,7 @@ const opencageapikey = process.env.opencageapikey;
 const moment = require('moment-timezone');
 const shopifyStore = process.env.shopifyStore;
 const shopifyToken = process.env.shopifyToken;
-const themeId = '157343285525';
+const themeId = '141820559633';
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
