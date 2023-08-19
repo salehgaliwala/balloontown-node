@@ -276,7 +276,7 @@ app.get('/datepicker-options', async(req, res) => {
              currentDate.add(1, 'days');
           }
            console.log(isMorning);
-           console.log(currentTime.format('hA'));
+           console.log(currentTime.format('h'));
            console.log(jsonData.selectedPeriods['11am']);
 
           if(isMorning && jsonData.selectedPeriods['11am']){      
