@@ -264,10 +264,10 @@ app.get('/datepicker-options', async(req, res) => {
           const jsonData = data.data;
           const currentTime = moment();
           const currentTimeFormatted = currentTime.format('h:mm A'); // Format as "3:30 PM"
-          const isMorning = currentTime.format('hA') === '11AM';
-          const isAfternoon = currentTime.format('hA') === '12PM';
-          const isOnePM = currentTime.format('hA') === '1PM';
-          const isTwoPM = currentTime.format('hA') === '2PM';
+          const isMorning = currentTime.format('h') >= 11;
+          const isAfternoon = currentTime.format('h') >= 12;
+          const isOnePM = currentTime.format('h') >= 13;
+          const isTwoPM = currentTime.format('h')  >= 14;
           const startDate = moment(jsonData.fromDate, 'YYYY-MM-DD');
           const endDate = moment(jsonData.toDate, 'YYYY-MM-DD');                   
           const currentDate = startDate.clone(); 
