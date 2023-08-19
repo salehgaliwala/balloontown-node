@@ -275,7 +275,10 @@ app.get('/datepicker-options', async(req, res) => {
             jsonData.dateFields.push(currentDate.format('YYYY-MM-DD'));
              currentDate.add(1, 'days');
           }
-           console.log(jsonData.dateFields);
+           console.log(isMorning);
+           console.log(currentTime.format('hA'));
+           console.log(jsonData.selectedPeriods['11am']);
+
           if(isMorning && jsonData.selectedPeriods['11am']){      
           // Add the current date to the blockedDates array if it's morning
                 jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
