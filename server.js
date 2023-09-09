@@ -38,16 +38,17 @@ app.post('/webhook', async(req, res) => {
 
   // Add the timestamp to the order data
   orderData.deliveryTimestamp = oneDayLater;
-  let existingOrders = [];
+   let existingOrders = [];
   // Save order data to a JSON file
   const timestamp = Date.now(); 
   //fs.writeFileSync(fileName, JSON.stringify(orderData, null, 2));
   const response = await axios.get(
       `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`
     ).then((data) => {
-          console.log(data.data);
-          existingOrders = JSON.parse(JSON.stringify(data.data));
-          
+          console.log(orderData);
+         
+         //existingOrders = JSON.parse(data.data);
+          existingOrders.push(data.data);
           existingOrders.push(orderData);
             axios({
                     method: 'PUT',
@@ -59,7 +60,7 @@ app.post('/webhook', async(req, res) => {
                     data: {
                       asset: {
                         key: reviews,
-                        value: JSON.stringify(existingOrdersexistingOrders),
+                        value: JSON.stringify( existingOrders ),
                       },
                     },
                   })
