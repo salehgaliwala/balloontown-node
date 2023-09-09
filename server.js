@@ -45,8 +45,9 @@ app.post('/webhook', async(req, res) => {
   const response = await axios.get(
       `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`
     ).then((data) => {
-          console.log(data.data);       
-          existingOrders = JSON.parse(data.data);
+          console.log(data.data);
+          existingOrders = JSON.parse(JSON.stringify(data.data));
+          
           existingOrders.push(orderData);
             axios({
                     method: 'PUT',
@@ -58,7 +59,7 @@ app.post('/webhook', async(req, res) => {
                     data: {
                       asset: {
                         key: reviews,
-                        value: existingOrders,
+                        value: JSON.stringify(existingOrdersexistingOrders),
                       },
                     },
                   })
