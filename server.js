@@ -18,8 +18,70 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const assetKey = 'assets/settings.json'; // The asset key (filename)
-
+const reviews = 'assets/reviews.json'; // The asset key (filename)
 const apiUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
+const reviewUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/reviews.json`;
+//Webhooh from the shopify after order is fulfilled.
+// Inside the /webhook route
+app.post('/webhook', async(req, res) => {
+  const { body } = req;
+
+  // Verify the webhook (You may want to implement Shopify's verification logic here)
+
+  // Extract order data
+  const orderData = body;
+
+  // Calculate the timestamp for "now + 1 day"
+  const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+  const now = new Date();
+  const oneDayLater = new Date(now.getTime() + oneDayInMilliseconds);
+
+  // Add the timestamp to the order data
+  orderData.deliveryTimestamp = oneDayLater;
+  let existingOrders = [];
+  // Save order data to a JSON file
+  const timestamp = Date.now(); 
+  //fs.writeFileSync(fileName, JSON.stringify(orderData, null, 2));
+  const response = await axios.get(
+      `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/reviews.json?${Date.now()}`
+    ).then((data) => {
+          console.log(data.data);
+          existingOrders = data.data
+          existingOrders.push(orderData);
+            axios({
+                    method: 'PUT',
+                    url: reviewUrl,
+                    headers: {
+                      "Content-Type": "application/json",
+                      "X-Shopify-Access-Token": shopifyToken,
+                    },
+                    data: {
+                      asset: {
+                        key: reviews,
+                        value: existingOrders,
+                      },
+                    },
+                  })
+                    .then((response) => {
+                      console.log(`Received and saved order data`);
+                  
+                    })
+                    .catch((error) => {
+                      console.error('Error saving order:', error);
+                      
+                    });
+        })
+        .catch((error) => {
+           console.error('Error receiving order:', error);
+           res.status(500).json({ error: 'Error receiving order' });
+        });
+  
+
+
+
+  res.status(200).send('Webhook received');
+});
+
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
