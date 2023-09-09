@@ -64,11 +64,12 @@ app.post('/webhook', async(req, res) => {
                   })
                     .then((response) => {
                       console.log(`Received and saved order data`);
+                       res.status(200).send('Webhook received');
                   
                     })
                     .catch((error) => {
                       console.error('Error saving order:', error);
-                      
+                      res.status(500).json({ error: 'Error saving order' });
                     });
         })
         .catch((error) => {
