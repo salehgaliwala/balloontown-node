@@ -43,7 +43,7 @@ app.post('/webhook', async(req, res) => {
   const timestamp = Date.now(); 
   //fs.writeFileSync(fileName, JSON.stringify(orderData, null, 2));
   const response = await axios.get(
-      `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/reviews.json?${Date.now()}`
+      `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`
     ).then((data) => {
           console.log(data.data);
           existingOrders = data.data
