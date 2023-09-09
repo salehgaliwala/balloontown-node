@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 const assetKey = 'assets/settings.json'; // The asset key (filename)
 const reviews = 'assets/reviews.json'; // The asset key (filename)
 const apiUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
-const reviewUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/reviews.json`;
+const reviewUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
 //Webhooh from the shopify after order is fulfilled.
 // Inside the /webhook route
 app.post('/webhook', async(req, res) => {
@@ -45,10 +45,10 @@ app.post('/webhook', async(req, res) => {
   const response = await axios.get(
       `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`
     ).then((data) => {
-          console.log(orderData);
+          console.log(data.data);
          
-         //existingOrders = JSON.parse(data.data);
-          existingOrders.push(data.data);
+          existingOrders = JSON.parse(JSON.stringify(data.data));
+        //  existingOrders.push(data.data);
           existingOrders.push(orderData);
             axios({
                     method: 'PUT',
@@ -60,7 +60,7 @@ app.post('/webhook', async(req, res) => {
                     data: {
                       asset: {
                         key: reviews,
-                        value: JSON.stringify( existingOrders ),
+                        value: JSON.stringify(existingOrders, null, 2),
                       },
                     },
                   })
