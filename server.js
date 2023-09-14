@@ -94,7 +94,7 @@ app.get('/process-orders', async (req, res) => {
                         }
                         sgMail.send(sendmail, (error, result) => {
                           if (error) {
-                            console.error('Error sending email:', error);
+                            console.log('Error sending email:', error);
                           } else {
                             console.log('Email sent successfully.');
                           }
@@ -103,7 +103,7 @@ app.get('/process-orders', async (req, res) => {
                     // 
                 })
                 .catch(error => {
-                 console.error('Error fetching product details:', error);
+                 console.log('Error fetching product details:', error);
                 });
            
           });  
