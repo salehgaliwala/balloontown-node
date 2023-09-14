@@ -63,10 +63,17 @@ app.get('/process-orders', async (req, res) => {
             const productID = obj.line_items[index].product_id;
             console.log(productID);
             // get the product image
-             await axios.get(productApiUrl+'/'+productID+'.json',{headers})
+             axios({
+                  method: 'GET',
+                  url: productApiUrl+'/'+productID+'.json',
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Shopify-Access-Token": shopifyToken,
+                  }                  
+                })           
                 .then(response => {
                     productImages =   response.data.product;  
-                    console.log( productImages.images.length );
+                  
                   if (productImages.images && productImages.images.length > 0) {
           
                       productImages.images.forEach(image => {
@@ -93,13 +100,13 @@ app.get('/process-orders', async (req, res) => {
                           subject: 'Review your purchase with Balloontown',
                           html: replacedTemplate,
                         }
-                        sgMail.send(sendmail, (error, result) => {
+                       /* sgMail.send(sendmail, (error, result) => {
                           if (error) {
                             console.log('Error sending email:', error);
                           } else {
                             console.log('Email sent successfully.');
                           }
-                        });
+                        });*/
                       }
                     // 
                 })
