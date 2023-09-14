@@ -119,35 +119,36 @@ app.get('/process-orders', async (req, res) => {
                             console.log('Error sending email:', error);
                           } else {
                             console.log('Email sent successfully.');
-                          }
-                        });
+                            jsonData.splice(index, 1);
+                              axios({
+                                  method: 'PUT',
+                                  url: reviewUrl,
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    "X-Shopify-Access-Token": shopifyToken,
+                                  },
+                                  data: {
+                                    asset: {
+                                      key: reviews,
+                                      value: JSON.stringify(jsonData, null, 2),
+                                    },
+                                  },
+                                })
+                                .then((response) => {
+                                  console.log(`Received and saved order data`);
+                                  res.status(200).json({ message: 'Data processing complete.' });
+                              
+                                })
+                                .catch((error) => {
+                                  console.error('Error saving order:', error);
+                                  res.status(500).json({ error: 'Error saving order' });
+                                });
+                                }
+                              });
                       }
                     // 
                     // Remove the object from the JSON array
-                        jsonData.splice(index, 1);
-                        axios({
-                            method: 'PUT',
-                            url: reviewUrl,
-                            headers: {
-                              "Content-Type": "application/json",
-                              "X-Shopify-Access-Token": shopifyToken,
-                            },
-                            data: {
-                              asset: {
-                                key: reviews,
-                                value: JSON.stringify(jsonData, null, 2),
-                              },
-                            },
-                          })
-                          .then((response) => {
-                            console.log(`Received and saved order data`);
-                            res.status(200).json({ message: 'Data processing complete.' });
                         
-                          })
-                          .catch((error) => {
-                            console.error('Error saving order:', error);
-                            res.status(500).json({ error: 'Error saving order' });
-                          });
                      
                 })
                 .catch(error => {
