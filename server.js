@@ -61,7 +61,7 @@ app.get('/process-orders', async (req, res) => {
           products.forEach(async(product,index) => {
             const productname = obj.line_items[index].name;
             const productID = obj.line_items[index].product_id;
-            
+            console.log(productID);
             // get the product image
              await axios.get(productApiUrl+'/'+productID+'.json',{headers})
                 .then(response => {
