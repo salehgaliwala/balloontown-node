@@ -52,11 +52,11 @@ app.get('/process-orders', async (req, res) => {
     jsonData.forEach((obj, index) => {
       const timestamp = new Date(obj.deliveryTimestamp);
       email = obj.customer.email;
-      console.log(obj.deliveryTimestamp);
+     
       // Check if the timestamp is greater than or equal to today
       if (timestamp <= today) 
       {
-          
+          console.log(obj.deliveryTimestamp); 
           products = obj.line_items;
           products.forEach(async(product,index) => {
             const productname = obj.line_items[index].name;
