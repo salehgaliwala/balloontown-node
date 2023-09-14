@@ -63,7 +63,7 @@ app.get('/process-orders', async (req, res) => {
             const productID = obj.line_items[index].product_id;
             console.log(productID);
             // get the product image
-             axios({
+             await axios({
                   method: 'GET',
                   url: productApiUrl+'/'+productID+'.json',
                   headers: {
