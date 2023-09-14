@@ -27,6 +27,21 @@ const sgMail = require('@sendgrid/mail');
 // Set up SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // Define a GET route to process the JSON data
+app.get('/test', async (req, res) => {
+  await axios({
+                  method: 'GET',
+                  url: productApiUrl+'/8320185663761.json',
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-Shopify-Access-Token": shopifyToken,
+                  }                  
+                })           
+                .then(response => {
+                  console.log(response);
+                    res.status(200).json({ message: 'Data processing complete.' });
+                })
+});
+
 app.get('/process-orders', async (req, res) => {
   try {
     // Fetch the JSON data from the remote URL    
