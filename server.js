@@ -56,12 +56,12 @@ app.get('/process-orders', async (req, res) => {
       // Check if the timestamp is greater than or equal to today
       if (timestamp <= today) 
       {
-          console.log(obj.deliveryTimestamp); 
+         // console.log(obj.deliveryTimestamp); 
           products = obj.line_items;
           products.forEach(async(product,index) => {
             const productname = obj.line_items[index].name;
             const productID = obj.line_items[index].product_id;
-            
+            console.log(productname );
             // get the product image
              await axios.get(productApiUrl+'/'+productID+'.json',{headers})
                 .then(response => {
