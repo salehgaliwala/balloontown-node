@@ -115,13 +115,13 @@ app.get('/process-orders', async (req, res) => {
                           subject: 'Review your purchase with Balloontown',
                           html: replacedTemplate,
                         }
-                       /* sgMail.send(sendmail, (error, result) => {
+                        sgMail.send(sendmail, (error, result) => {
                           if (error) {
                             console.log('Error sending email:', error);
                           } else {
                             console.log('Email sent successfully.');
                           }
-                        });*/
+                        });
                       }
                     // 
                     // Remove the object from the JSON array
