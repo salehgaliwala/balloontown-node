@@ -88,7 +88,7 @@ app.get('/process-orders', async (req, res) => {
                 })           
                 .then(response => {
                     productImages =   response.data.product;  
-                  
+                    console.log(productImages);
                   if (productImages.images && productImages.images.length > 0) {
           
                       productImages.images.forEach(image => {
