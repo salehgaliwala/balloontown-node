@@ -80,7 +80,7 @@ app.get('/process-orders', async (req, res) => {
             // get the product image
              await axios({
                   method: 'GET',
-                  url: productApiUrl+'/'+productID+'.json',
+                  url: productApiUrl+'/8320185663761.json',
                   headers: {
                     "Content-Type": "application/json",
                     "X-Shopify-Access-Token": shopifyToken,
