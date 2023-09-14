@@ -83,7 +83,7 @@ app.get('/process-orders', async (req, res) => {
                     linehtml = linehtml + html;
                     const replacedTemplate = emailTemplate.replace('{product}', linehtml); 
                        email = obj.customer.email;
-                       console.log(email);
+                       console.log(email);  
                     if(email) {  
                       console.log(email);               
                       const sendmail = {
@@ -131,7 +131,7 @@ app.get('/process-orders', async (req, res) => {
           })
           .catch((error) => {
             console.error('Error saving order:', error);
-            res.status(500).json({ error: 'Error saving order' });
+           // res.status(500).json({ error: 'Error saving order' });
           });
       }
     });   
