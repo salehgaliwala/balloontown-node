@@ -56,6 +56,7 @@ app.get('/process-orders', async (req, res) => {
       if (timestamp <= today) 
       {
           console.log(obj.deliveryTimestamp); 
+          console.log(obj.id); 
           products = obj.line_items;
           products.forEach(async(product,index) => {
             const productname = obj.line_items[index].name;
