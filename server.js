@@ -85,7 +85,7 @@ app.get('/process-orders', async (req, res) => {
                        email = obj.customer.email;
                        console.log(email);
                     if(email) {  
-                                 
+                      console.log(email);               
                       const sendmail = {
                           to: email, // Replace with the recipient's email address
                           from: 'customer.service@balloontown.com.au', // Replace with your sender email address
