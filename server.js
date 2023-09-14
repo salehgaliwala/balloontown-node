@@ -66,8 +66,8 @@ app.get('/process-orders', async (req, res) => {
              await axios.get(productApiUrl+'/'+productID+'.json',{headers})
                 .then(response => {
                     productImages =   response.data.product;  
-                    console.log( productImages );
-                  if (productImages.images && productImages .images.length > 0) {
+                    console.log( productImages.images.length );
+                  if (productImages.images && productImages.images.length > 0) {
           
                       productImages.images.forEach(image => {
                         console.log(image.src);
