@@ -51,8 +51,7 @@ app.get('/process-orders', async (req, res) => {
     // Iterate through JSON objects
     jsonData.forEach((obj, index) => {
       const timestamp = new Date(obj.deliveryTimestamp);
-      email = obj.customer.email;
-     
+   
       // Check if the timestamp is greater than or equal to today
       if (timestamp <= today) 
       {
@@ -83,8 +82,10 @@ app.get('/process-orders', async (req, res) => {
                     const html = '<tbody><tr><td><table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; width: 600px; margin: 0 auto;" width="600"><tbody><tr><td class="column column-1" width="25%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"><table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class="pad" style="width:100%;"><div class="alignment" align="center" style="line-height:10px"><img src="'+productImg+'" style="display: block; height: auto; border: 0; max-width: 150px; width: 100%;" width="150" /></div></td></tr></table></td><td class="column column-2" width="75%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"><table class="heading_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class="pad"><h2 style="margin: 0; color: #000; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">'+productname+'</span></h2></td></tr></table><table class="button_block block-2" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"><tr><td class="pad"><div class="alignment" align="left"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://g.page/r/CW7maa3ApfR7EB0/review" style="height:29px;width:91px;v-text-anchor:middle;" arcsize="14%" stroke="false" fillcolor="#c7a3ab"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#000; font-family:Arial, sans-serif; font-size:16px"><![endif]--><a href="https://g.page/r/CW7maa3ApfR7EB0/review" target="_blank" style="text-decoration:none;display:inline-block;color:#000;background-color:#c7a3ab;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:700;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Arial, \'Helvetica Neue\', Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 19.2px;">Write a review</span></span></a></center></v:textbox></v:roundrect></div></td></tr></table></td></tr></tbody></table></td></tr></tbody></table>';
                     linehtml = linehtml + html;
                     const replacedTemplate = emailTemplate.replace('{product}', linehtml); 
+                       email = obj.customer.email;
+                       console.log(email);
                     if(email) {  
-                      console.log(email);               
+                                 
                       const sendmail = {
                           to: email, // Replace with the recipient's email address
                           from: 'customer.service@balloontown.com.au', // Replace with your sender email address
