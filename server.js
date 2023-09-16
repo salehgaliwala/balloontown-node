@@ -80,7 +80,19 @@ app.get('/send-review-emails', async (req, res) => {
           };
           const replacedTemplate = emailTemplate.replace('{product}', linehtml); 
           if(email){
-            await sendEmail(email,replacedTemplate);
+            const sendmail = {
+                to: email, // Replace with the recipient's email address
+                from: 'customer.service@balloontown.com.au', // Replace with your sender email address
+                subject: 'Review your purchase with Balloontown',
+                html: replacedTemplate,
+              }
+              await sgMail.send(sendmail, (error, result) => {
+                if (error) {
+                  console.log('Error sending email:', error);
+                } else {
+                  console.log('Error sent to ${email}');
+                }
+              });
           }
           // Remove the order item from the orderDetails array
           const indexToRemove = orderDetails.indexOf(orderItem);
@@ -118,22 +130,7 @@ app.get('/send-review-emails', async (req, res) => {
 
 });
 
-// Function to send emails
-async function sendEmail(email,emailbody) {
-  try {
-    const mailOptions = {
-      from: 'customer.service@balloontown.com.au',
-      to: email,
-      subject: `Review your purchase with Balloontown`,
-      text:emailbody ,
-    };
 
-    const info = await smtpTransport.sendMail(mailOptions);
-    console.log(`Email sent for order ${email}`);
-  } catch (error) {
-    throw new Error(`Error sending email for order`+ error.message);
-  }
-}
 
 // Function to fetch product details
 async function fetchProductDetails(products) {
