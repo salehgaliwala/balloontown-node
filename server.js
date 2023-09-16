@@ -90,7 +90,7 @@ app.get('/send-review-emails', async (req, res) => {
                 if (error) {
                   console.log('Error sending email:', error);
                 } else {
-                  console.log('Error sent to ${email}');
+                  console.log(`Email sent to ${email}`);
                 }
               });
           }
