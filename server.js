@@ -77,6 +77,25 @@ app.get('/send-review-emails', async (req, res) => {
         if(email){
           await sendEmail(email,replacedTemplate);
         }
+        // Remove the order item from the orderDetails array
+        const indexToRemove = orderDetails.indexOf(orderItem);
+        if (indexToRemove !== -1) {
+          orderDetails.items.splice(indexToRemove, 1);
+          await axios({
+                            method: 'PUT',
+                            url: reviewUrl,
+                            headers: {
+                              "Content-Type": "application/json",
+                              "X-Shopify-Access-Token": shopifyToken,
+                            },
+                            data: {
+                              asset: {
+                                key: reviews,
+                                value: JSON.stringify(orderDetails, null, 2),
+                              },
+                            },
+                          })
+        }
         
     
 
