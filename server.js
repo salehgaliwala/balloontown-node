@@ -271,7 +271,7 @@ app.post('/saveSettings', (req, res) => {
 
 app.get('/getSettings', async(req, res) => {
    const response = await axios.get(
-      `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
+      `https://balloontown.com.au/cdn/shop/t/2/assets/settings.json?${Date.now()}`
     ).then((data) => {
           console.log(data.data);
           const settings = data.data;
