@@ -472,6 +472,8 @@ app.get('/datepicker-options', async(req, res) => {
           const jsonData = data.data;
           const currentTime = moment();
           const currentTimeFormatted = currentTime.format('h:mm A'); // Format as "3:30 PM"
+          const isNine = currentTime.format('H') >= 9;
+          const isTen = currentTime.format('H') >= 10;
           const isMorning = currentTime.format('H') >= 11;
           const isAfternoon = currentTime.format('H') >= 12;
           const isOnePM = currentTime.format('H') >= 13;
@@ -486,6 +488,18 @@ app.get('/datepicker-options', async(req, res) => {
            console.log(isMorning);
            console.log(currentTime.format('H'));
            console.log(jsonData.selectedPeriods['11am']);
+          
+          if(isNine && jsonData.selectedPeriods['9am']){      
+          // Add the current date to the blockedDates array if it's morning
+                jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
+              //  console.log(jsonData.dateFields);
+          }
+          if(isTen && jsonData.selectedPeriods['10am']){      
+          // Add the current date to the blockedDates array if it's morning
+                jsonData.dateFields.push(currentTime.format('YYYY-MM-DD'));
+              //  console.log(jsonData.dateFields);
+          }
+
 
           if(isMorning && jsonData.selectedPeriods['11am']){      
           // Add the current date to the blockedDates array if it's morning
