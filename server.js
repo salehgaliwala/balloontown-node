@@ -545,6 +545,7 @@ app.get('/datepicker-options', async(req, res) => {
           maxDate: '+30d', // Allow selecting dates up to 30 days from today
           blockedWeekdays: blockedWeekdays,
           blockedDates: jsonData.dateFields, 
+          deliveryNote: jsonData.deliveryNote,
           // Add other options as needed
         };
         res.json(datepickerOptions);
