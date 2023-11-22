@@ -254,6 +254,7 @@ app.post('/login', (req, res) => {
 
 app.post('/saveReviews', async(req, res) => {
    const { indexToDelete } = req.body;
+   console.log(indexToDelete);
    const orderDetails = await fetchOrderDetails(); 
           if (indexToDelete >= 0 && indexToDelete < reviews.length) {
             orderDetails.splice(indexToDelete, 1);
@@ -276,6 +277,7 @@ app.post('/saveReviews', async(req, res) => {
       
 
           console.log('Reviews Saved.');
+          res.status(200).send('Review deleted successfully.');
         });
 
 app.post('/saveSettings', (req, res) => {
