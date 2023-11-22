@@ -26,6 +26,7 @@ const productApiUrl = `https://${shopifyStore}/admin/api/2021-10/products/`;
 const sgMail = require('@sendgrid/mail');
 const orderApiEndpoint = `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`;
 const productApiEndpoint = `https://${shopifyStore}/admin/api/2021-10/products/`;
+
  const headers = {
            'X-Shopify-Access-Token': shopifyToken,
       };
@@ -164,6 +165,16 @@ async function fetchOrderDetails() {
   }
 }
 
+// Function to fetch review details
+async function fetchReviewDetails() {
+  try {
+    const response = await axios.get(reviewApiEndpoint);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching order details: ${error.message}`);
+  }
+}
+
 //Webhook from the shopify after order is fulfilled.
 // Inside the /webhook route
 app.post('/webhook', async(req, res) => {
@@ -240,6 +251,33 @@ app.post('/login', (req, res) => {
     res.json({ success: false, message: 'Invalid credentials' });
   }
 });
+
+app.post('/saveReviews', async(req, res) => {
+   const { indexToDelete } = req.body;
+   const reviewDetails = await fetchOrderDetails(); 
+   const indexToRemove = orderDetails.indexOf(orderItem);
+          if (indexToDelete >= 0 && indexToDelete < reviews.length) {
+            orderDetails.splice(indexToDelete, 1);
+            await axios({
+              method: 'PUT',
+              url: reviewUrl,
+              headers: {
+                "Content-Type": "application/json",
+                "X-Shopify-Access-Token": shopifyToken,
+              },
+              data: {
+                asset: {
+                  key: reviews,
+                  value: JSON.stringify(orderDetails, null, 2),
+                },
+              },
+            })
+          }
+          
+      
+
+          console.log('Reviews Saved.');
+        });
 
 app.post('/saveSettings', (req, res) => {
   const settings = req.body;
