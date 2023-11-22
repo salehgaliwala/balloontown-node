@@ -255,7 +255,6 @@ app.post('/login', (req, res) => {
 app.post('/saveReviews', async(req, res) => {
    const { indexToDelete } = req.body;
    const orderDetails = await fetchOrderDetails(); 
-   const indexToRemove = orderDetails.indexOf(orderItem);
           if (indexToDelete >= 0 && indexToDelete < reviews.length) {
             orderDetails.splice(indexToDelete, 1);
             await axios({
