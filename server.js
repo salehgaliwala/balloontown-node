@@ -369,7 +369,7 @@ app.post('/calculate_shipping', async function(req, res){
    try {
 
        const response = await axios.get(
-          `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/2/assets/settings.json?${Date.now()}`
+          `https://cdn.shopify.com/s/files/1/0808/2230/5045/t/34/assets/settings.json?${Date.now()}`
          ).then(async (data) => {
           const jsonData = data.data;
           startPostalCode = jsonData.storeAddress;
