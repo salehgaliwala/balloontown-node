@@ -24,7 +24,7 @@ const apiUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/asse
 const reviewUrl = `https://${shopifyStore}/admin/api/2023-04/themes/${themeId}/assets.json`;
 const productApiUrl = `https://${shopifyStore}/admin/api/2021-10/products/`;
 const sgMail = require('@sendgrid/mail');
-const orderApiEndpoint = `https://balloontown.com.au/cdn/shop/t/2/assets/reviews.json?${Date.now()}`;
+const orderApiEndpoint = `https://balloontown.com.au/cdn/shop/t/34/assets/reviews.json?${Date.now()}`;
 const productApiEndpoint = `https://${shopifyStore}/admin/api/2021-10/products/`;
 
  const headers = {
@@ -310,7 +310,7 @@ app.post('/saveSettings', (req, res) => {
 
 app.get('/getSettings', async(req, res) => {
    const response = await axios.get(
-      `https://balloontown.com.au/cdn/shop/t/2/assets/settings.json?${Date.now()}`
+      `https://balloontown.com.au/cdn/shop/t/34/assets/settings.json?${Date.now()}`
     ).then((data) => {
           console.log(data.data);
           const settings = data.data;
